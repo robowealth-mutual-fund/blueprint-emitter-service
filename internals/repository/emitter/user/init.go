@@ -1,4 +1,4 @@
-package userloginemitter
+package user
 
 import (
 	"github.com/lovoo/goka"
@@ -9,10 +9,10 @@ type Emitter struct {
 	*goka.Emitter
 }
 
-func NewUserLoginEmitter() (*Emitter, error) {
+func NewUserEmitter(codec goka.Codec) (*Emitter, error) {
 	conf := config.NewConfiguration()
-
 	tmc := goka.NewTopicManagerConfig()
+
 	nb := len(conf.Kafka.Brokers)
 	tmc.Table.Replication = nb
 	tmc.Stream.Replication = nb
@@ -22,12 +22,12 @@ func NewUserLoginEmitter() (*Emitter, error) {
 		return nil, err
 	}
 
-	err = tm.EnsureStreamExists(conf.Emitter.UserLoginStreamTopic, conf.Emitter.UserLoginStreamTopicNpar)
+	err = tm.EnsureStreamExists(conf.Emitter.User.TopicStream, conf.Emitter.User.NumPar)
 	if err != nil {
 		return nil, err
 	}
 
-	emitter, err := goka.NewEmitter(conf.Kafka.Brokers, goka.Stream(conf.Emitter.UserLoginStreamTopic), nil)
+	emitter, err := goka.NewEmitter(conf.Kafka.Brokers, goka.Stream(conf.Emitter.User.TopicStream), codec)
 	if err != nil {
 		return nil, err
 	}

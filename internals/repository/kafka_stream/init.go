@@ -1,13 +1,15 @@
 package kafkastreams
 
 import (
-	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/emitter/user_login_emitter"
+	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/emitter/user"
 )
 
 type Emitter struct {
-	UsrLoginEmitter *userloginemitter.Emitter
+	UsrLoginEmitter *user.Emitter
 }
 
-func NewEmitter(usrLoginEmitter *userloginemitter.Emitter) *Emitter {
-	return &Emitter{UsrLoginEmitter: usrLoginEmitter}
+func NewEmitter(usrLoginEmitter *user.Emitter) *Emitter {
+	return &Emitter{
+		UsrLoginEmitter: usrLoginEmitter,
+	}
 }

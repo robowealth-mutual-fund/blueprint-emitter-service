@@ -1,9 +1,6 @@
 package container
 
 import (
-	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/emitter/user_login_emitter"
-	kafkastreams "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/kafka_stream"
-	userWrp "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/service/user/wrapper"
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -17,8 +14,12 @@ import (
 	grpcServer "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/infrastructure/grpcServer"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/infrastructure/httpServer"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/infrastructure/jaeger"
+	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/codec"
+	usrEmitter "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/emitter/user"
+	kafkastreams "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/kafka_stream"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/postgres"
 	userSvc "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/service/user"
+	userWrp "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/service/user/wrapper"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/utils"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/utils/logrus"
 	"github.com/robowealth-mutual-fund/shared-utility/validator"
@@ -60,13 +61,14 @@ func (c *Container) Configure() error {
 		postgres.NewRepository,
 
 		kafkastreams.NewEmitter,
-		userloginemitter.NewUserLoginEmitter,
+		usrEmitter.NewUserEmitter,
 
 		controller.NewHealthZController,
 
 		userSvc.NewService,
 		userCtrl.NewController,
 		userWrp.NewWrapper,
+		codec.NewCodec,
 	}
 	for _, service := range servicesConstructors {
 		if err := c.container.Provide(service); err != nil {
@@ -103,18 +105,6 @@ func (c *Container) MigrateDB() error {
 	if err := c.container.Invoke(func(d *database.DB) {
 		d.MigrateDB()
 	}); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// PrepareEmitterTopics prepare all topics for all emitters
-func (c *Container) PrepareEmitterTopics() error {
-	conf := config.NewConfiguration()
-
-	err := utils.EnsureStreamExists(conf.Kafka.Brokers, conf.Emitter.UserLoginStreamTopic, conf.Emitter.UserLoginStreamTopicNpar)
-	if err != nil {
 		return err
 	}
 

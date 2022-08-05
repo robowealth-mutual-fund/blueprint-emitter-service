@@ -15,11 +15,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	err = server.PrepareEmitterTopics()
-	if err != nil {
-		log.Panic(err)
-	}
-
 	if err := server.Start(); err != nil {
 		log.Panic(err)
 	}
