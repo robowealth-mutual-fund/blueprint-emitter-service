@@ -81,7 +81,7 @@ golangci-lint run
 ## Resources
 
 - [Apache Kafka](https://kafka.apache.org)
-- [GoDoc](https://godoc.org/github.com/lovoo/goka)
+- [Goka's GoDoc](https://godoc.org/github.com/lovoo/goka)
 - [Golangci-lint](https://golangci-lint.run/)
 
 ## Happy Coding...
