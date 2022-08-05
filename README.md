@@ -19,8 +19,8 @@ such as counter, filter or lookup etc.
 ## Dependencies
 
 - Goka
-- go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-- go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+- Protoc gen gRPC gateway
+- Protoc gen OpenAPI V2
 
 ## Prerequisites
 
