@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
+	usrCodec "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/codec/user"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/config"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/controller"
 	userCtrl "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/controller/user"
@@ -14,9 +15,8 @@ import (
 	grpcServer "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/infrastructure/grpcServer"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/infrastructure/httpServer"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/infrastructure/jaeger"
-	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/codec"
-	usrEmitter "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/emitter/user"
 	kafkastreams "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/kafka_stream"
+	usrEmitter "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/kafka_stream/emitter/user"
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/repository/postgres"
 	userSvc "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/service/user"
 	userWrp "github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/service/user/wrapper"
@@ -68,7 +68,7 @@ func (c *Container) Configure() error {
 		userSvc.NewService,
 		userCtrl.NewController,
 		userWrp.NewWrapper,
-		codec.NewCodec,
+		usrCodec.NewCodec,
 	}
 	for _, service := range servicesConstructors {
 		if err := c.container.Provide(service); err != nil {

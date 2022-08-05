@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/lovoo/goka"
+
 	"github.com/robowealth-mutual-fund/blueprint-emitter-service/internals/config"
 )
 
